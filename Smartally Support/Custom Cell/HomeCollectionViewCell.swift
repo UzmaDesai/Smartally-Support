@@ -1,24 +1,18 @@
 //
-//  JobView.swift
+//  HomeCollectionViewCell.swift
 //  Smartally Support
 //
-//  Created by Muqtadir Ahmed on 23/05/17.
+//  Created by Uzma Desai on 06/11/17.
 //  Copyright © 2017 Bitjini. All rights reserved.
 //
 
-import IQKeyboardManagerSwift
 import UIKit
+import IQKeyboardManagerSwift
 
-protocol JobViewDelegate {
-    func dropBanner(withString message: String)
-    func updateJob(atIndex index: Int)
-}
-
-class JobView: UIView {
-    
+class HomeCollectionViewCell: UICollectionViewCell {
     fileprivate var decimalCount: Int = 0
     var delegate: JobViewDelegate?
-    var index = 0
+    //var index = 0
     
     // Class Instances.
     lazy var datePicker: DatePickerView = {
@@ -29,44 +23,24 @@ class JobView: UIView {
     }()
     
     lazy var scroller: ImageScrollView = {
-        let scroll = ImageScrollView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 200)) //Constants.height - 260
+        let scroll = ImageScrollView(frame: CGRect(x: 0, y: 10, width: self.bounds.width, height: 270)) //Constants.height - 260
         scroll.edelegate = self
         return scroll
     }()
-
-    // @IBOutlets.
-   // @IBOutlet weak var imageView: UIImageView!
+    
     @IBOutlet weak var textFieldName: UITextField!
     @IBOutlet weak var textFieldAmount: UITextField!
     @IBOutlet weak var textFieldDate: UITextField!
     @IBOutlet weak var textFieldInvoice: UITextField!
-   
-   // @IBOutlet weak var scrollableView: ImageScrollView!
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { super.touchesBegan(touches, with: event); endEditing(true) }
+    @IBOutlet weak var buttonUpdate: UIButton!
     
-    func set() {
-        self.addSubview(scroller)
-        scroller.imageView.kf.indicatorType = .activity
-        let job = Job.jobs[index]
-        print(job)
-        // Set image.
-        if let url = job.imageEp {
-            
-            scroller.imageView.kf.setImage(with: url, placeholder: UIImage(named: "jobs_placeholder"))
-           // imageView.kf.setImage(with: url, placeholder: UIImage(named: "jobs_placeholder"))
-        }
-        else { scroller.imageView.image = UIImage(named: "jobs_placeholder") }
-        // Other texts.
-        textFieldName.text = "Uber"
-        //if job.name == " " { textFieldName.text = "" }else { textFieldName.text = job.name }
-      
-        if job.amount == " " { textFieldAmount.text = "" } else { textFieldAmount.text = job.amount}
-        
-        textFieldDate.text = job.date?.mediumStyle() ?? ""
-        textFieldInvoice.text = job.invoice
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        buttonUpdate.layer.borderColor = UIColor.red.cgColor
     }
     
+   
     @IBAction func showDatePicker(_ sender: UIButton) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.endEditing(true)
@@ -75,12 +49,37 @@ class JobView: UIView {
     }
     
     @IBAction func buttonUpdateAction(_ sender: UIButton) {
-        delegate?.updateJob(atIndex: self.index)
+        delegate?.updateJob(atIndex: sender.tag)
+    }
+    
+    func set() {
+        
+        self.addSubview(scroller)
+        scroller.imageView.kf.indicatorType = .activity
+        //print(tag)
+        let job = Job.jobs[tag]
+       // print(job)
+        // Set image.
+        if let url = job.imageEp {
+            
+            scroller.imageView.kf.setImage(with: url, placeholder: UIImage(named: "jobs_placeholder"))
+            // imageView.kf.setImage(with: url, placeholder: UIImage(named: "jobs_placeholder"))
+        }
+        else { scroller.imageView.image = UIImage(named: "jobs_placeholder") }
+        // Other texts.
+        
+        if job.name == " " { textFieldName.text = "" }else { textFieldName.text = job.name }
+        
+        if job.amount == " " { textFieldAmount.text = "" } else { textFieldAmount.text = job.amount}
+        
+        textFieldDate.text = job.date?.mediumStyle() ?? ""
+        textFieldInvoice.text = job.invoice
     }
     
 }
 
-extension JobView: DatePickerDelegate, EndEditingDelegate {
+
+extension HomeCollectionViewCell: DatePickerDelegate, EndEditingDelegate {
     func selectedDate(_ date: Date) {
         Job.jobs[tag].date = date
         set()
@@ -91,7 +90,7 @@ extension JobView: DatePickerDelegate, EndEditingDelegate {
     }
 }
 
-extension JobView: UITextFieldDelegate {
+extension HomeCollectionViewCell: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         switch textField.tag {
@@ -100,7 +99,7 @@ extension JobView: UITextFieldDelegate {
             
         case 1:
             decimalCount = 0
-        
+            
         default:
             break
         }
@@ -163,3 +162,5 @@ extension JobView: UITextFieldDelegate {
         return true
     }
 }
+
+

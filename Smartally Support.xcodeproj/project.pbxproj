@@ -33,6 +33,9 @@
 		75F34AE91ED5926F00D5A8AD /* LoginRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F34AE81ED5926F00D5A8AD /* LoginRegisterViewController.swift */; };
 		75F34AEB1ED5934800D5A8AD /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F34AEA1ED5934700D5A8AD /* Validator.swift */; };
 		E04105A911136090FAFB6B2A /* Pods_Smartally_Support.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8E3F793B0E82C7ED3EE35A4 /* Pods_Smartally_Support.framework */; };
+		F664C6F31FB0AD0A00B88BA2 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664C6F21FB0AD0A00B88BA2 /* HomeCollectionViewCell.swift */; };
+		F664C6F71FB0B35300B88BA2 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F664C6F61FB0B35300B88BA2 /* HomeCollectionViewCell.xib */; };
+		F66F39AE1FB188AF00CC4E4F /* CenterCellCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66F39AD1FB188AF00CC4E4F /* CenterCellCollectionViewFlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +70,9 @@
 		C8E3F793B0E82C7ED3EE35A4 /* Pods_Smartally_Support.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Smartally_Support.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F4D9C4EEFE62988E132D14 /* Pods-Smartally Support.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Smartally Support.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Smartally Support/Pods-Smartally Support.debug.xcconfig"; sourceTree = "<group>"; };
 		EA04F1833241F29E8C9A52DE /* Pods-Smartally Support.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Smartally Support.release.xcconfig"; path = "Pods/Target Support Files/Pods-Smartally Support/Pods-Smartally Support.release.xcconfig"; sourceTree = "<group>"; };
+		F664C6F21FB0AD0A00B88BA2 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeCollectionViewCell.swift; path = "Custom Cell/HomeCollectionViewCell.swift"; sourceTree = "<group>"; };
+		F664C6F61FB0B35300B88BA2 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = HomeCollectionViewCell.xib; path = Views/XIBs/HomeCollectionViewCell.xib; sourceTree = "<group>"; };
+		F66F39AD1FB188AF00CC4E4F /* CenterCellCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CenterCellCollectionViewFlowLayout.swift; path = "Custom Classes/CenterCellCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +109,7 @@
 			children = (
 				75F34AE41ED56B1800D5A8AD /* DatePickerView.xib */,
 				7501AB431ED43680006E32DC /* JobView.xib */,
+				F664C6F61FB0B35300B88BA2 /* HomeCollectionViewCell.xib */,
 			);
 			name = XIBs;
 			sourceTree = "<group>";
@@ -131,6 +138,7 @@
 				75D032451ECEC34900FDB4DD /* AppDelegate.swift */,
 				75D032591ECEC86000FDB4DD /* Controllers */,
 				75D0326B1ECECF0800FDB4DD /* Custom Classes */,
+				F645F3461FB0543B00EFB6FE /* Custom Cell */,
 				75D032761ECF0E1400FDB4DD /* Custom Views */,
 				75D032581ECEC85900FDB4DD /* Models */,
 				75D0326A1ECECEE400FDB4DD /* Utilities */,
@@ -206,6 +214,7 @@
 				75D4E32D1ED03ECD008E8DBD /* GetJobs.swift */,
 				75D4E32F1ED03EDE008E8DBD /* UpdateJob.swift */,
 				75F34AEA1ED5934700D5A8AD /* Validator.swift */,
+				F66F39AD1FB188AF00CC4E4F /* CenterCellCollectionViewFlowLayout.swift */,
 			);
 			name = "Custom Classes";
 			sourceTree = "<group>";
@@ -220,6 +229,14 @@
 				50EF2F311EDEC28C00178501 /* ImageScrollView.swift */,
 			);
 			name = "Custom Views";
+			sourceTree = "<group>";
+		};
+		F645F3461FB0543B00EFB6FE /* Custom Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F664C6F21FB0AD0A00B88BA2 /* HomeCollectionViewCell.swift */,
+			);
+			name = "Custom Cell";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -292,6 +309,7 @@
 			files = (
 				75F34AE51ED56B1800D5A8AD /* DatePickerView.xib in Resources */,
 				75D0325F1ECEC90300FDB4DD /* Main.storyboard in Resources */,
+				F664C6F71FB0B35300B88BA2 /* HomeCollectionViewCell.xib in Resources */,
 				7501AB3F1ED41BA7006E32DC /* GoogleService-Info.plist in Resources */,
 				75D0324D1ECEC34900FDB4DD /* Assets.xcassets in Resources */,
 				75D0325E1ECEC90300FDB4DD /* LaunchScreen.storyboard in Resources */,
@@ -386,7 +404,9 @@
 				75D0326F1ECECF6C00FDB4DD /* Registrar.swift in Sources */,
 				75D4E3281ED01C07008E8DBD /* Extensions.swift in Sources */,
 				75D4E32E1ED03ECD008E8DBD /* GetJobs.swift in Sources */,
+				F66F39AE1FB188AF00CC4E4F /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				75D032751ECEF94600FDB4DD /* User.swift in Sources */,
+				F664C6F31FB0AD0A00B88BA2 /* HomeCollectionViewCell.swift in Sources */,
 				75F34AEB1ED5934800D5A8AD /* Validator.swift in Sources */,
 				7501AB461ED43A4C006E32DC /* JobView.swift in Sources */,
 				75F34AE91ED5926F00D5A8AD /* LoginRegisterViewController.swift in Sources */,
@@ -500,7 +520,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Smartally Support/Smartally Support.entitlements";
 				DEVELOPMENT_TEAM = 6TP9C3Z7N8;
 				INFOPLIST_FILE = "Smartally Support/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bitjini.Smartally-Support";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -516,7 +536,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Smartally Support/Smartally Support.entitlements";
 				DEVELOPMENT_TEAM = 6TP9C3Z7N8;
 				INFOPLIST_FILE = "Smartally Support/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bitjini.Smartally-Support";
 				PRODUCT_NAME = "$(TARGET_NAME)";

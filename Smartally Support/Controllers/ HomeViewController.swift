@@ -20,8 +20,9 @@ var didReceiveNotification = false
 class HomeViewController: BaseViewController, JobViewDelegate , NotificationDelegate {
     
     // @IBOutlets.
-    @IBOutlet weak var viewKoloda: KolodaView!
-    
+   // @IBOutlet weak var viewKoloda: KolodaView!
+   // @IBOutlet weak var tableViewJob: UITableView!
+    @IBOutlet weak var collectionViewJob: UICollectionView!
     // Parameters.
     var didLoad: Bool = false
     
@@ -47,15 +48,35 @@ class HomeViewController: BaseViewController, JobViewDelegate , NotificationDele
     // Lifecycle.
     override func viewDidLoad() { super.viewDidLoad(); onViewDidLoad() }
     override func viewDidAppear(_ animated: Bool) { super.viewDidAppear(animated); onViewDidAppear() }
+    override func viewDidLayoutSubviews() { super.viewDidLayoutSubviews() ; onViewDidLayoutSubviews() }
     
     func onViewDidLoad() {
         // Koloda preferences.
-        viewKoloda.dataSource = self
-        viewKoloda.delegate = self
+        //viewKoloda.dataSource = self
+        //viewKoloda.delegate = self
         delegate = self
         // Navigation Bar preferences.
         let reloadButton = UIBarButtonItem(title: "More Jobs", style: .plain, target: self, action: #selector(getJobs))
         navigationItem.rightBarButtonItem = reloadButton
+        
+        //tableViewJob.register(UINib(nibName: "HomeTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HomeTableViewCell")
+        collectionViewJob.register(UINib(nibName: "HomeCollectionViewCell",bundle:Bundle.main), forCellWithReuseIdentifier: "HomeCollectionViewCell")
+        
+    }
+   
+    func onViewDidLayoutSubviews() {
+        var insets = self.collectionViewJob.contentInset
+        var value : CGFloat = 10.0
+        insets.left = value
+        insets.right = value
+      if Job.jobs.isEmpty {
+           value = (self.view.frame.size.width - (self.collectionViewJob.collectionViewLayout as! UICollectionViewFlowLayout).itemSize.width) * 0.25
+        //insets.left = 30
+     //   insets.right = 30
+       }
+        
+        self.collectionViewJob.contentInset = insets
+        self.collectionViewJob.decelerationRate = UIScrollViewDecelerationRateFast;
     }
     
     func onViewDidAppear() {
@@ -70,73 +91,58 @@ class HomeViewController: BaseViewController, JobViewDelegate , NotificationDele
         indicator.start(onView: view)
         job.getJobs()
     }
+    
+    func updateJob(atIndex index: Int) {
+        swiped(jobAtIndex: index)
+    }
 }
 
 extension HomeViewController: GetJobDelegate {
     
     func reload() {
         indicator.stop()
-        viewKoloda.resetCurrentCardIndex()
+       // viewKoloda.resetCurrentCardIndex()
+       // tableViewJob.reloadData()
+        collectionViewJob.reloadData()
     }
     
     func failed(withError error: String) {
         indicator.stop()
         dropBanner(withString: error)
         _ = (error == "Job already completed." || error == "Job not found.") ?
-            getJobs() :
-            viewKoloda.revertAction()
+           getJobs() : reload()
+           // viewKoloda.revertAction()
     }
 }
 
-// DataSource:
-extension HomeViewController: KolodaViewDataSource {
+extension HomeViewController : UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
-    func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Job.jobs.isEmpty ? 1 : Job.jobs.count
     }
     
-    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
-        return .default
-    }
-    
-    func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if Job.jobs.isEmpty {
-            let imageView = UIImageView(image: UIImage(named: "no_data"))
-            imageView.contentMode = .center
-            return imageView
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NoDataCell", for: indexPath)
+            
+            return cell
         }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCollectionViewCell", for: indexPath) as! HomeCollectionViewCell
+        cell.buttonUpdate.tag = indexPath.row
+        cell.tag = indexPath.row
+        cell.delegate = self
+        cell.set()
         
-        let view = viewJob
-        view.tag = index; view.set()
-        return view
+        return cell
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
-        return nil
+     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if Job.jobs.isEmpty { return CGSize(width: collectionView.frame.size.width , height: collectionView.frame.size.height/1.25) }
+        return CGSize(width: collectionView.frame.size.width, height: 425) //405
     }
 }
 
-// Delegate:
-extension HomeViewController: KolodaViewDelegate {
-    
-    func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int) -> Bool {
-        return !Job.jobs.isEmpty
-    }
-    
-    func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool {
-        return direction == .right || direction == .left
-    }
-    
-    func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
-        if direction == .right{ swiped(jobAtIndex: index) } else { swipedLeft(jobAtIndex: index) }
-    }
-    
-    func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-        koloda.resetCurrentCardIndex()
-    }
-}
-
-// Swiped Right.
+// Swiped Right Update.
 extension HomeViewController: UpdateJobDelegate {
     
     func swiped(jobAtIndex index: Int) {
@@ -149,17 +155,17 @@ extension HomeViewController: UpdateJobDelegate {
         catch Validator.Err.name {
             dropBanner(withString: "Can't update job with blank merchant name.")
             // Bring back the table.
-            viewKoloda.revertAction()
+           // viewKoloda.revertAction()
         }
         catch Validator.Err.amount {
             dropBanner(withString: "Can't update job with blank amount.")
             // Bring back the table.
-            viewKoloda.revertAction()
+          //  viewKoloda.revertAction()
         }
         catch Validator.Err.date {
             dropBanner(withString: "Can't update job with blank date.")
             // Bring back the table.
-            viewKoloda.revertAction()
+         //   viewKoloda.revertAction()
         }
         catch {} // Nope, never ever!
     }
@@ -176,13 +182,63 @@ extension HomeViewController: UpdateJobDelegate {
     }
 }
 
-// Swiped left.
-extension HomeViewController {
-   
-    func swipedLeft(jobAtIndex index: Int) {
-        if index == Job.jobs.count { return }
-       let _ = viewKoloda.viewForCard(at: index + 1)
-        
-    }
-}
+// Delegate:
+//extension HomeViewController: KolodaViewDelegate {
+//
+//    func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int) -> Bool {
+//        return !Job.jobs.isEmpty
+//    }
+//
+//    func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool {
+//        return direction == .right || direction == .left
+//    }
+//
+//    func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
+//        if direction == .right{ swiped(jobAtIndex: index) } else { swipedLeft(jobAtIndex: index) }
+//    }
+//
+//    func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
+//        koloda.resetCurrentCardIndex()
+//    }
+//}
+
+
+//// Swiped left.
+//extension HomeViewController {
+//
+//    func swipedLeft(jobAtIndex index: Int) {
+//        if index == Job.jobs.count { return }
+//     //  let _ = viewKoloda.viewForCard(at: index + 1)
+//
+//    }
+//}
+
+// DataSource:
+//extension HomeViewController: KolodaViewDataSource {
+//
+//    func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
+//        return Job.jobs.isEmpty ? 1 : Job.jobs.count
+//    }
+//
+//    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
+//        return .default
+//    }
+//
+//    func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
+//        if Job.jobs.isEmpty {
+//            let imageView = UIImageView(image: UIImage(named: "no_data"))
+//            imageView.contentMode = .center
+//            return imageView
+//        }
+//
+//        let view = viewJob
+//        view.tag = index; view.set()
+//        return view
+//    }
+//
+//    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
+//        return nil
+//    }
+//}
+
 
