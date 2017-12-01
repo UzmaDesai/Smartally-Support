@@ -9,8 +9,12 @@ target 'Smartally Support' do
   pod 'Alamofire', '~> 4.4'
   pod 'IQKeyboardManagerSwift', '~> 4.0.9'
   pod 'Kingfisher', '~> 3.9.1'
-  pod 'Firebase/Core', '~> 4.0.0'
+  pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Koloda', '~> 4.1'
+   #pod 'Firebase/Core', '4.0.4'
+   # pod 'Firebase/Database', '4.0.4'
+   # pod 'Firebase/Messaging', '4.0.4'
+    pod 'FirebaseInstanceID', '2.0.0'
 
 end

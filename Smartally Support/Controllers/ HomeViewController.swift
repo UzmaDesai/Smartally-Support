@@ -8,6 +8,7 @@
 
 import Koloda
 import UIKit
+import FirebaseMessaging
 
 protocol NotificationDelegate {
    func getJobs()
@@ -61,7 +62,23 @@ class HomeViewController: BaseViewController, JobViewDelegate , NotificationDele
         
         //tableViewJob.register(UINib(nibName: "HomeTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "HomeTableViewCell")
         collectionViewJob.register(UINib(nibName: "HomeCollectionViewCell",bundle:Bundle.main), forCellWithReuseIdentifier: "HomeCollectionViewCell")
+       // map()
         
+    }
+    
+    func map() {
+        let array = [1,2,3,4,5]
+        
+        let array1 = array.map { (value:Int) -> Int in
+            return value * 2
+        }
+        print(array1)
+        
+        let array2 = array.map{value in value * 2}
+        print(array2)
+        
+        let array3 = array.map{$0 * 2}
+        print(array3)
     }
    
     func onViewDidLayoutSubviews() {

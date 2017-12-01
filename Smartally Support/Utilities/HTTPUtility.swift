@@ -66,4 +66,33 @@ extension HTTPUtility {
     private func failure(_ data: Error?) {
         self.delegate?.failedRequest(response: data?.localizedDescription ?? "Unknown response." )
     }
+    
+    func registerDevice(withToken token: String) {
+    guard let url = URL(string: "https://reimburse.herokuapp.com/register_device/")
+        else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue(token,
+                         forHTTPHeaderField: "DEVICE-TOKEN")
+        request.addValue("",
+                         forHTTPHeaderField: "NAME")
+        request.addValue("ios",
+                         forHTTPHeaderField: "PLATFORM")
+        request.addValue(getDate(),
+                         forHTTPHeaderField: "DATE")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Register device token status =>", httpResponse.statusCode)
+            }
+        }
+        task.resume()
+    }
+    
+    func getDate() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter.string(from: date)
+    }
 }
