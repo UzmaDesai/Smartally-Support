@@ -44,7 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate,UNUserN
     }
 
     
-    
 //    // Token Refresh Delegate.
 //    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
 //        print("fcm token = \(fcmToken)")

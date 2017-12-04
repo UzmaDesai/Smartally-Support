@@ -14,11 +14,15 @@ class BaseViewController: UIViewController {
     // Indicator.
     lazy var indicator: ILIndicator = ILIndicator()
 
-    override func viewDidLoad() { super.viewDidLoad() }
+    override func viewDidLoad() { super.viewDidLoad() ; oninit() }
     
     // End editing.
     func endEditing() {
         view.endEditing(true)
+    }
+    
+    func oninit() {
+        middleware.http.hdelegate = self
     }
     
     // Error to User interface.
@@ -31,6 +35,35 @@ class BaseViewController: UIViewController {
         banner.dismissesOnTap = true
         banner.dismissesOnSwipe = true
         banner.show(navigationController?.view ?? view, duration: 3.0)
+    }
+}
+
+// MARK: Invalid token handler.
+extension BaseViewController: HttpDelegate {
+    
+    func invalidateSession() {
+        let alert = UIAlertController(title: "Authenticate Again",
+                                      message: "You cannot use SmarTally on two devices using same registration number simultaneously.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK",
+                                      style: .default,
+                                      handler: { (okHandler) in
+                                        // Delete user settings.
+                                        // dataManager.logOutUser()
+                                       // dataManager.shouldLogin(value: false)
+                                        user.logOut()
+                                        
+                                        // Load login screen.
+                                    //    let appdelegate = UIApplication.shared.delegate as! AppDelegate
+//                                        let storyboard = UIStoryboard(name: "Register", bundle: nil)
+//                                        let rootVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+//                                        appdelegate.window?.rootViewController = rootVC
+        }))
+        
+        DispatchQueue.main.async {
+            self.present(alert,
+                         animated: true,
+                         completion: nil)
+        }
     }
 }
 

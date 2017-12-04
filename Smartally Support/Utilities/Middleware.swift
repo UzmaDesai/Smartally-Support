@@ -10,6 +10,7 @@ import FirebaseMessaging
 import UIKit
 import Alamofire
 
+let middleware: Middleware = Middleware()
 class Middleware {
     
     // Class' shared instance.

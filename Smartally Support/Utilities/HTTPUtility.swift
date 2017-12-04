@@ -12,11 +12,16 @@ protocol HTTPUtilityDelegate {
     func completedRequest(response: [String : AnyObject])
     func failedRequest(response: String)
 }
+protocol HttpDelegate {
+    func invalidateSession()
+}
 
 class HTTPUtility {
     
     static let shared = HTTPUtility()
     
+    // session delegate.
+    var hdelegate: HttpDelegate?
     // Delegate.
     var delegate: HTTPUtilityDelegate?
     // Current request.
@@ -60,6 +65,13 @@ extension HTTPUtility {
     
     private func success(_ data: Any?) {
         guard let data = data as? [String : AnyObject] else { failure(nil); return }
+        guard let status = data["status"] as? Int else { failure(nil); return }
+        //Session invalidated.
+        if status == 401 {
+            self.hdelegate?.invalidateSession()
+            return
+        }
+
         self.delegate?.completedRequest(response: data)
     }
     
